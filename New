@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Template Example</title>
+</head>
+<body>
+    <h1>Kamaraj College of Engineering and Technology</h1>
+    <h2>Web Applications using Django Framework</h2>
+    <p>Dr. R. Arthy, AP/IT</p>
+    <h3>Creating and Working with Template</h3>
+
+    <h4>ODD or EVEN Checker</h4>
+    <form method="GET" action="">
+        Enter a number: <input type="number" name="number">
+        <button type="submit">Check</button>
+    </form>
+
+    {% if result %}
+        <p>{{ result }}</p>
+    {% endif %}
+
+    <h4>Name Filter</h4>
+    <form method="GET" action="">
+        Enter a character: <input type="text" name="character" maxlength="1">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if names %}
+        <ul>
+            {% for name in names %}
+                <li>{{ name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
+
+
+from django.shortcuts import render
+
+def index(request):
+    result = None
+    names = []
+
+    # ODD or EVEN Checker
+    if 'number' in request.GET:
+        try:
+            number = int(request.GET['number'])
+            if number % 2 == 0:
+                result = f"{number} is an even number"
+            else:
+                result = f"{number} is an odd number"
+        except ValueError:
+            result = "Please enter a valid number"
+
+    # Name Filter
+    if 'character' in request.GET:
+        character = request.GET['character'].upper()
+        sample_names = ["Hello", "Hai", "Apple", "Banana"]
+        names = [name for name in sample_names if name.upper().startswith(character)]
+
+    return render(request, 'myapp/index.html', {'result': result, 'names': names})
